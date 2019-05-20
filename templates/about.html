@@ -1,0 +1,65 @@
+{% extends "master.html" %}
+{% block content %}
+<style>
+.black, .panel-title{
+  background-color: rgb(47, 64, 80) !important;
+  padding: 5px !important;
+}
+.panel-warning{
+  border:none !important;
+}
+
+.red {
+  background-color: rgb(237, 85, 101) !important;
+}
+
+.green {
+  background-color: rgb(26, 179, 148) !important;
+}
+
+.orange {
+  background-color: rgb(248, 172, 89) !important;
+}
+
+.blue {
+  background-color: rgb(35, 198, 200) !important;
+}
+
+.row.single-news {
+    background-color: #23c6c8;
+    color: white;
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #2f4050;
+}
+
+.news-impact {
+    background: #ed5565;
+    padding: 5px;
+    border-radius: 10px;
+}
+</style>
+
+<script>
+    angular.module('myApp', [])
+    .controller('HomeCtrl', function($scope, $http, $interval) {
+        $scope.documentTitle = "About Us :-: StockStalker :-:"
+
+    });
+
+
+</script>
+
+
+<div class="row" ng-app="myApp" ng-controller="HomeCtrl">
+    <div class="col-lg-12">
+
+        <div class="col-lg-4"></div>
+        <div class="col-lg-4">
+            <div class="row text-center"> <h1 class="page-header" ng-bind="documentTitle">Choose a Stock</h1></div>
+        </div>
+        <div class="col-lg-4"></div>
+    </div>
+</div>
+
+{% endblock %}

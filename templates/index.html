@@ -1,0 +1,236 @@
+{% extends "master.html" %}
+{% block content %}
+
+<style>
+.black, .panel-title{
+  background-color: rgb(47, 64, 80) !important;
+  padding: 5px !important;
+}
+.panel-warning{
+  border:none !important;
+}
+
+.red {
+  background-color: rgb(237, 85, 101) !important;
+}
+
+.green {
+  background-color: rgb(26, 179, 148) !important;
+}
+
+.orange {
+  background-color: rgb(248, 172, 89) !important;
+}
+
+.blue {
+  background-color: rgb(35, 198, 200) !important;
+}
+
+.row.single-news {
+    background-color: #2f4050;
+    color: white;
+    padding: 5px;
+    border-radius: 5px;
+    border: 1px solid #2f4050;
+}
+
+.news-img {
+    width: 105px !important;
+    height: 90px;
+}
+
+.news-impact {
+    background: #ed5565;
+    padding: 5px;
+    border-radius: 10px;
+    float: right !important;
+}
+</style>
+
+<script>
+    angular.module('myApp', [])
+    .controller('HomeCtrl', function($scope, $http, $interval) {
+
+        $scope.choosenStock = "";
+        $scope.documentTitle = ":-: StockStalker :-:"
+        $scope.allStocks = "";
+        $scope.stockArray = {Microsoft:'12',Facebook:'13',Google:'14',Apple:'15'};
+        $scope.submitButton = "Submit";
+        $scope.cuurentStock = "APPL";
+
+		$scope.getStocksList = function()
+        {
+				{
+							 $http({
+						method: 'POST',
+						url: '/getStocksList',
+						data: {
+							message: 'please all stocks names'
+						}
+					}).then(function(response) {
+
+								console.log('Login Response', response.data);
+								$scope.allStocks = response.data.stocksList;
+								//alert("User Logged : " + response.data.currentUser);
+								//$scope.currentUser = response.data.currentUser + " :-: Cinema Management System";
+
+
+								/***********************/
+
+					}, function(error) {
+						console.log(error);
+					});
+				}
+
+        }
+
+        $scope.redirectToStreamLivePage = function()
+        {
+				window.location.href = "StreamLive1/" + $scope.currentStock;
+
+        }
+
+        $scope.streamLive = function()
+        {
+				{
+							 $http({
+						method: 'POST',
+						url: '/streamLive',
+						data: {
+							message: 'please send all stocks names'
+						}
+					}).then(function(response) {
+
+								console.log('Login Response qwerty : ', response.data);
+								 $scope.stockArray.Microsoft = response.data.Microsoft;
+								 $scope.stockArray.Facebook = response.data.Facebook;
+								 $scope.stockArray.Apple = response.data.Apple;
+								 $scope.stockArray.Google = response.data.Google;
+								//$scope.allStocks = response.data;
+								//alert("User Logged : " + response.data.currentUser);
+								//$scope.currentUser = response.data.currentUser + " :-: Cinema Management System";
+
+
+								/***********************/
+
+					}, function(error) {
+						console.log(error);
+					});
+				}
+
+        }
+
+		$scope.streamLive();
+        $scope.streamLive2 = function() {
+        $scope.streamLive();
+                $interval( function(){ $scope.streamLive(); }, 30000);
+        }
+        $scope.streamLive2();
+
+    });
+
+
+</script>
+
+
+<div class="row" ng-app="myApp" ng-controller="HomeCtrl">
+    <div class="col-lg-12">
+
+        <div class="col-lg-4"></div>
+        <div class="col-lg-4">
+            <div class="row text-center"> <h1 class="page-header">Choose a Stock</h1></div>
+           <div class="row">
+               <div class="form-group text-center">
+               <form class="" action="{{ url_for('stream_stock') }}" method="post">
+                   <select class="form-control" ng-model="currentStock" name="selected">
+                       {% for stock in stocks %}
+                       <option value="{{stock.symbol}}">{{ stock.name+" "+stock.symbol }}</option>
+                       {% endfor %}
+                   </select>
+                   <hr />
+                   <input type="submit" value="Submit" class="btn btn-lg btn-danger" />
+               </form>
+               </div>
+           </div>
+        </div>
+        <div class="col-lg-4"></div>
+    </div>
+</div>
+
+
+
+<div class="row" ng-app="myApp" ng-controller="HomeCtrl">
+    <h1 class="page-header text-center"> Popular Stocks </h1>
+
+    <div class="col-lg-12">
+
+        <div class="col-lg-3 text-center text-uppercase" style="color:white !important;">
+            <div class="panel panel-warning">
+                <div class="panel-title font-bold page-header">Microsoft Coorporation</div>
+                <div class="panel-body font-bold red"><h1 ng-bind="stockArray.Microsoft"></h1></div>
+                <div class="panel-footer black">-23.7%</div>
+            </div>
+            <hr />
+            <a class="twitter-timeline" data-lang="en" data-height="500" data-theme="dark" href="https://twitter.com/Microsoft">Tweets by Microsoft</a> <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+        </div>
+
+        <div class="col-lg-3 text-center text-uppercase" style="color:white !important;">
+            <div class="panel panel-warning">
+                <div class="panel-title font-bold page-header">Apple Inc.</div>
+                <div class="panel-body font-bold green"><h1 ng-bind="stockArray.Apple"></h1></div>
+                <div class="panel-footer black">-13.7%</div>
+            </div>
+            <hr />
+<a class="twitter-timeline" data-lang="en" data-height="500" data-theme="dark" href="https://twitter.com/AppleSupport">Tweets by aaplstocknews</a> <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+        </div>
+
+        <div class="col-lg-3 text-center text-uppercase" style="color:white !important;">
+            <div class="panel panel-warning">
+                <div class="panel-title font-bold page-header">Google Inc.</div>
+                <div class="panel-body font-bold orange"><h1 ng-bind="stockArray.Google"></h1></div>
+                <div class="panel-footer black">-2.7%</div>
+            </div>
+             <hr />
+            <a class="twitter-timeline" data-lang="en" data-height="500" data-theme="dark" href="https://twitter.com/Google">Tweets by Microsoft</a> <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+        </div>
+
+        <div class="col-lg-3 text-center text-uppercase" style="color:white !important;">
+            <div class="panel panel-warning">
+                <div class="panel-title font-bold page-header">Facebook</div>
+                <div class="panel-body font-bold blue"><h1 ng-bind="stockArray.Facebook"></h1></div>
+                <div class="panel-footer black">-1.7%</div>
+            </div>
+             <hr />
+            <a class="twitter-timeline" data-lang="en" data-height="500" data-theme="dark" href="https://twitter.com/facebook">Tweets by Microsoft</a> <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+        </div>
+
+
+
+    </div>
+
+</div>
+
+
+<div class="col-lg-12">
+    <div class="page-header h2 text-center">Latest Finance News</div>
+
+    {% for Record in Records %}
+    <div class="row single-news" style="width:95%">
+        <div class="col-lg-12">
+            <div class="col-lg-2 col-sm-2 col-md-3 news-img"><img class="thumbnail img-responsive" src="{{ Record['image'] }}" ></div>
+            <div class="col-lg-9 col-sm-7 col-md-5 news-data">
+                <div class="row h5 title"><strong><a href="{{ Record['link'] }}"  target="_blank" style="color:white !important;">{{ Record["title"] }}</a></strong></div>
+                <div class="row content">{{ Record["description"] }}<br />
+                </div>
+            </div>
+            <div class="col-lg-1 col-sm-2 col-md-3 news-impact h3 text-center"> 57%</div>
+        </div>
+    </div>
+    <hr />
+    {% endfor %}
+
+
+</div>
+
+
+{% endblock %}

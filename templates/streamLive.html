@@ -1,0 +1,696 @@
+{% extends "master.html" %}
+{% block content %}
+
+<div id='data'></div>
+
+<div class="wrapper wrapper-content">
+    <div class="row">
+        <div class="col-lg-2">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-success pull-right"></span>
+                    <h5>Current</h5>
+                </div>
+                <div class="ibox-content">
+                    <h1 ng-bind="currentP" class="no-margins"> {{ initialValues[0]['close'] }} </h1>
+                    <div class="stat-percent font-bold text-success">98% <i class="fa fa-bolt"></i></div>
+                    <small>$ (USD)</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-2">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-info pull-right">5M Ago</span>
+                    <h5>Open</h5>
+                </div>
+                <div class="ibox-content">
+                    <h1 ng-bind="openP" class="no-margins"> {{ initialValues[0]['open'] }} </h1>
+                    <div class="stat-percent font-bold text-info">20% <i class="fa fa-level-up"></i></div>
+                    <small>$ (USD)</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-2">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-primary pull-right">5M Ago</span>
+                    <h5>High</h5>
+                </div>
+                <div class="ibox-content">
+                    <h1 ng-bind="highP" class="no-margins"> {{ initialValues[0]['high'] }} </h1>
+                    <div class="stat-percent font-bold text-navy">44% <i class="fa fa-level-up"></i></div>
+                    <small>$ (USD)</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-2">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-danger pull-right">5M Ago</span>
+                    <h5>Low</h5>
+                </div>
+                <div class="ibox-content">
+                    <h1 ng-bind="lowP" class="no-margins"> {{ initialValues[0]['low'] }} </h1>
+                    <div class="stat-percent font-bold text-danger">38% <i class="fa fa-level-down"></i></div>
+                    <small>$ (USD)</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-2">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-primary pull-right">5M Ago</span>
+                    <h5>Close</h5>
+                </div>
+                <div class="ibox-content">
+                    <h1 ng-bind="closeP" class="no-margins"> {{ initialValues[0]['close'] }} </h1>
+                    <div class="stat-percent font-bold text-navy">44% <i class="fa fa-level-up"></i></div>
+                    <small>$ (USD)</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-2">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <span class="label label-primary pull-right">5M Ago</span>
+                    <h5>Volume</h5>
+                </div>
+                <div class="ibox-content">
+                    <h1 ng-bind="volume" class="no-margins"> {{ initialValues[0]['volume'] }} </h1>
+                    <div class="stat-percent font-bold text-navy">44% <i class="fa fa-level-up"></i></div>
+                    <small>Shares</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5> {{ initialValues[0]['name'] }} ( {{ initialValues[0]['symbol'] }} ) </h5> &nbsp; <span> {{ initialValues[0]['zone'] }}</span>
+                    <div class="pull-right">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-xs btn-white active">Today</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="flot-chart">
+                                <div id="chartContainer" style="height: 100%; width: 100%;"></div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <hr />
+
+
+<div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title text-center"><h4 ><i class="fa fa-bolt"></i> Relative Change</h4></div>
+
+                <div class="col-lg-3">
+                    <div class="widget style1 navy-bg" ng-class="m10">
+                        <div class="row vertical-align">
+                            <div class="col-lg-5">
+                                <h3 class="font-bold">10 Min.</h3>
+                            </div>
+                            <div class="col-lg-7 text-right">
+                                <h3 class=""><span ng-bind="m10_change"></span> <i class="fa fa-level-up" ng-class="m10_level"></i></h3>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                                                <div class="col-lg-3">
+                    <div class="widget style1 navy-bg" ng-class="m15">
+                        <div class="row vertical-align">
+                            <div class="col-lg-5">
+                                <h3 class="font-bold">15 Min.</h3>
+                            </div>
+                            <div class="col-lg-7 text-right">
+                                <h3 class=""><span ng-bind="m15_change"></span> <i class="fa fa-level-up" ng-class="m15_level"></i></h3>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                                    <div class="col-lg-3">
+                    <div class="widget style1 navy-bg" ng-class="m20">
+                        <div class="row vertical-align">
+                            <div class="col-lg-5">
+                                <h3 class="font-bold">20 Min.</h3>
+                            </div>
+                            <div class="col-lg-7 text-right">
+                                <h3 class=""><span ng-bind="m20_change"></span> <i class="fa fa-level-up" ng-class="m20_level"></i></h3>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                                   <div class="col-lg-3">
+                    <div class="widget style1 navy-bg" ng-class="m60">
+                        <div class="row vertical-align">
+                            <div class="col-lg-5">
+                                <h3 class="font-bold">60 Min.</h3>
+                            </div>
+                            <div class="col-lg-7 text-right">
+                                <h3 class=""><span ng-bind="m60_change"></span> <i class="fa fa-level-up" ng-class="m60_level"></i></h3>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </div>
+        <div class="col-lg-3">
+
+
+    </div>
+    </div>
+
+<hr />
+    <br />
+
+        <div class="row">
+        <div class="col-lg-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title text-center">
+                    <h4 ><i class="fa fa-area-chart"></i> Rolling Mean</h4>
+
+                </div>
+                <div class="ibox-content">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="flot-chart">
+                                <div id="chartroll" style="height: 100%; width: 100%;"></div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+    <script src="static/js/plugins/chartJs/Chart.min.js"></script>
+<script src="static/js/plugins/toastr/toastr.min.js"></script>
+
+<script>
+
+
+var openP = {{ initialValues[0]['open'] }};
+var closeP = {{ initialValues[0]['close'] }};
+var highP = {{ initialValues[0]['high'] }};
+var lowP = {{ initialValues[0]['low'] }};
+var volume = {{ initialValues[0]['volume'] }};
+var _5 = (parseFloat({{ initialValues[0]['m5_change'] }}) * 100).toPrecision(4);
+var _10 = (parseFloat({{ initialValues[0]['m10_change'] }})* 100).toPrecision(4);
+var _15 = (parseFloat({{ initialValues[0]['m15_change'] }})* 100).toPrecision(4);
+var _20 = (parseFloat({{ initialValues[0]['m20_change'] }})* 100).toPrecision(4);
+var _60 = (parseFloat({{ initialValues[0]['m60_change'] }})* 100).toPrecision(4);
+
+
+var m10 = "widget style1 red-bg";
+var m10_level = "fa fa-level-down";
+var m10_change = _10;
+
+if (_10 >= 0){
+    m10 = "widget style1 navy-bg";
+    m10_level = "fa fa-level-up";
+    m10_change = "+"+_10;
+   }
+
+var m15 = "widget style1 red-bg";
+var m15_level = "fa fa-level-down";
+var m15_change = _15;
+
+if (_15 >= 0){
+    m10 = "widget style1 navy-bg";
+    m10_level = "fa fa-level-up";
+    m10_change = "+"+_15;
+   }
+
+var m20 = "widget style1 red-bg";
+var m20_level = "fa fa-level-down";
+var m20_change = _20;
+
+if (_20 >= 0){
+    m20 = "widget style1 navy-bg";
+    m20_level = "fa fa-level-up";
+    m20_change = "+"+_20;
+   }
+
+var m60 = "widget style1 red-bg";
+var m60_level = "fa fa-level-down";
+var m60_change = _60;
+
+
+if (_60 >= 0){
+    m60 = "widget style1 navy-bg";
+    m60_level = "fa fa-level-up";
+    m60_change = "+"+_60;
+   }
+
+
+    angular.module('myApp', [])
+    .controller('HomeCtrl', function($scope)
+    {
+        //$scope.info = {};
+        $scope.CompanyName = "Stock Stalker";
+        $scope.documentTitle = ":-: StockStalker.com :-:";
+        $scope.currentP = closeP;
+         $scope.openP = openP;
+            $scope.highP = highP;
+            $scope.lowP = lowP;
+            $scope.closeP = closeP;
+            $scope.volume = volume;
+
+        $scope.updateValues = function()
+        {
+            $scope.openP = openP;
+            $scope.highP = highP;
+            $scope.lowP = lowP;
+            $scope.closeP = closeP;
+            $scope.volume = volume;
+            $scope.currentP = closeP;
+            //console.log("****** Aaa gyea", $scope.openP);
+            $scope.m10 = m10;
+            $scope.m10_level = m10_level;
+            $scope.m10_change = m10_change;
+
+            $scope.m15 = m15;
+            $scope.m15_level = m15_level;
+            $scope.m15_change = m15_change;
+
+            $scope.m20 = m20;
+            $scope.m20_level = m20_level;
+            $scope.m20_change = m20_change;
+
+            $scope.m60 = m60;
+            $scope.m60_level = m60_level;
+            $scope.m60_change = m60_change;
+
+            $scope.$apply();
+        }
+        setInterval(function(){$scope.updateValues()}, 300);
+
+    });
+
+
+
+function addMinutes(date, minutes) {
+    return new Date(date.getTime() + minutes*60000);
+}
+
+function clean_json(mystring){
+values = mystring.replace(new RegExp('u&#39;', 'g'), '"');
+values = values.replace(new RegExp('&#39;', 'g'), '"');
+return values
+}
+
+
+
+
+window.onload = function () {
+
+data = []
+pred = []
+answers = []
+rolling = []
+var green = "#32ea32";
+var red = "#fe3232";
+
+values = "{{ initialValues }}"
+values = values.replace(new RegExp('u&#39;', 'g'), '"');
+values = values.replace(new RegExp('&#39;', 'g'), '"');
+parsed = JSON.parse(values)
+
+openP = parsed[0]['open']
+closeP = parsed[0]['close']
+highP = parsed[0]['high']
+lowP = parsed[0]['low']
+volume = parsed[0]['volume']
+
+console.log(parsed[0])
+
+    setTimeout(function() {
+                toastr.options = {
+                  "closeButton": true,
+                  "debug": false,
+                  "progressBar": true,
+                  "positionClass": "toast-top-right",
+                  "onclick": null,
+                  "showDuration": "400",
+                  "hideDuration": "1000",
+                  "timeOut": "10000",
+                  "extendedTimeOut": "1000",
+                  "showEasing": "swing",
+                  "hideEasing": "linear",
+                  "showMethod": "fadeIn",
+                  "hideMethod": "fadeOut"
+                };
+                toastr.info('Live Stock Prediction', parsed[0]['name']);
+
+            }, 1300);
+
+
+<!--values = clean_json(values)-->
+
+for(var i = parsed.length-1; i>=0 ; i-- ){
+
+        if( parseFloat(parsed[i]['close']) > parseFloat(parsed[i]['open']) )
+        {
+            d = {x: new Date(parsed[i]['date']), y:[parseFloat(parsed[i]['open']), parseFloat(parsed[i]['high']), parseFloat(parsed[i]['low']), parseFloat(parsed[i]['close'])],color:green}
+        }
+        else
+        {
+            d = {x: new Date(parsed[i]['date']), y:[parseFloat(parsed[i]['open']), parseFloat(parsed[i]['high']), parseFloat(parsed[i]['low']), parseFloat(parsed[i]['close'])],color:red}
+        }
+    rolling.push({x: new Date(parsed[i]['date']), y:parseFloat(parsed[i]['rolling_mean']) })
+    data.push(d)
+}
+
+predictions = "{{ predictions }}"
+predictions = predictions.replace(new RegExp('u&#39;', 'g'), '"');
+predictions = predictions.replace(new RegExp('&#39;', 'g'), '"');
+mypredictions = JSON.parse(predictions)
+var gap = -0.1
+
+for(var i = (mypredictions.length/2)-1; i>=0 ; i-- ){
+
+	mylabel = "";
+    mycolor = "";
+        if(parseInt(mypredictions[i]['predicted_movement']) > 0){
+			mylabel = "Gain";
+			mycolor = "#00b503";
+        }
+        else{
+			mylabel = "Loss";
+			mycolor = "#ed5565";
+        }
+    p = {x: new Date(mypredictions[i]['ndate']), y:parseFloat(mypredictions[i]['current_closing']),indexLabel:mylabel, color:mycolor,  markerColor:mycolor}
+    pred.push(p)
+}
+
+
+for(var i = mypredictions.length-1; i>=mypredictions.length/2 ; i-- ){
+    mylabel = "";
+    mycolor = "";
+    mType = "triangle";
+    mColor: "#6B8E23";
+
+        if(parseInt(mypredictions[i]['predicted_movement']) ==  parseInt(mypredictions[i]['actual_movement'])){
+			mType = "triangle";
+			mycolor = "#00b503";
+        }
+        else{
+			mType = "cross";
+			mycolor = "#ed5565";
+        }
+    p = {x: new Date(mypredictions[i]['ndate']), y:parseFloat(mypredictions[i]['next_closing'])+gap,indexLabel:mylabel, color:mycolor,  markerColor:mycolor, markerType:mType}
+        answers.push(p)
+}
+
+
+
+last_date = parsed[0]['date']
+symbol = parsed[0]['symbol']
+
+CanvasJS.addColorSet("greenShades",
+                [//colorSet Array
+                "#00e600"
+                ]);
+
+var chart = new CanvasJS.Chart("chartContainer",
+{
+    colorSet: "greenShades",
+    <!--zoomEnabled: true,-->
+    exportEnabled: true,
+	title:{
+		text: "Live Prediction of {{ initialValues[0]['name'] }}",
+	},
+
+	axisY: {
+		includeZero:false,
+		title: "Prices",
+		prefix: "$",
+	},
+	axisX: {
+		interval:5,
+		intervalType: "minute",
+		valueFormatString: "H:mm",
+		title: "Minute wise Stock Prices",
+	},
+	data: [
+	{
+		type: "candlestick",
+		risingColor: green,
+		showInLegend: true,
+		color:red,
+	    legendText: "Live Data",
+		xValueFormatString:"DD MMM, YYYY - H:mm ",
+		dataPoints: data
+	},{
+	    type: "spline",
+	    showInLegend: true,
+	    legendText: "Next Hour Prediction",
+	    color: green,
+	    xValueFormatString:"DD MMM, YYYY - H:m ",
+	    dataPoints: pred
+	},{
+	    type: "spline",
+	    color: "#1ab394",
+	    showInLegend: true,
+	    legendText: "Wrong Prediction",
+	    legendMarkerType: "cross",
+	    markerColor:red,
+	    xValueFormatString:"DD MMM, YYYY - H:m ",
+	    dataPoints: answers
+	}
+	]
+});
+
+var rollchart = new CanvasJS.Chart("chartroll",
+{
+    colorSet: "greenShades",
+    exportEnabled: true,
+	title:{
+		text: "",
+	},
+
+	axisY: {
+		includeZero:false,
+		title: "Mean"
+	},
+	axisX: {
+		interval:5,
+		intervalType: "minute",
+		valueFormatString: "H:mm"
+	},
+	data: [
+	{
+		type: "line",
+		fillOpacity: 0,
+		showInLegend: true,
+		color:"#3da1b0",
+	    legendText: "Prev. 25 Minutes Average Return",
+		xValueFormatString:"DD MMM, YYYY - H:mm ",
+		dataPoints: rolling
+	}
+	]
+});
+
+
+var updateInterval = 50;
+var dataLength = 12; // number of dataPoints visible at any point
+var predicLength = 12;
+var answersLength = 12;
+
+var updateChart = function () {
+
+    if (data.length > dataLength )
+		{
+			data.shift();
+			rolling.shift();
+		}
+
+		if (pred.length > dataLength)
+		{
+			pred.shift();
+		}
+
+		if (answers.length > dataLength)
+		{
+            answers.shift()
+		}
+chart.render();
+rollchart.render();
+};
+
+function getStockValue(parsed)
+        {
+
+				jQuery.ajax({
+						method: 'GET',
+						url: '/getLatest',
+						data: {"symbol": symbol, "ldate":last_date},
+						dataType: "json",
+                        contentType: "application/json"
+					}).then(function(response) {
+
+                    if(typeof(response.actual) != "undefined" && typeof(response.predicted) != "undefined"){
+
+
+                    actual = JSON.parse(response.actual)
+					mypredictions = JSON.parse(response.predicted)
+
+
+                    openP = actual[0]['open']
+                    closeP = actual[0]['close']
+                    highP = actual[0]['high']
+                    lowP = actual[0]['low']
+                    volume = actual[0]['volume']
+
+                    _5 = (parseFloat( actual[0]['m5_change'] ) * 100).toPrecision(4);
+                    _10 = (parseFloat( actual[0]['m10_change'] )* 100).toPrecision(4);
+                    _15 = (parseFloat( actual[0]['m15_change'] )* 100).toPrecision(4);
+                    _20 = (parseFloat( actual[0]['m20_change'] )* 100).toPrecision(4);
+                    _60 = (parseFloat( actual[0]['m60_change'] )* 100).toPrecision(4);
+
+
+                    m10 = "widget style1 red-bg";
+                    m10_level = "fa fa-level-down";
+                    m10_change = _10;
+
+                    if (_10 >= 0){
+                        m10 = "widget style1 navy-bg";
+                        m10_level = "fa fa-level-up";
+                        m10_change = "+"+_10;
+                       }
+
+                    m15 = "widget style1 red-bg";
+                    m15_level = "fa fa-level-down";
+                    m15_change = _15;
+
+                    if (_15 >= 0){
+                        m10 = "widget style1 navy-bg";
+                        m10_level = "fa fa-level-up";
+                        m10_change = "+"+_15;
+                       }
+
+                    m20 = "widget style1 red-bg";
+                    m20_level = "fa fa-level-down";
+                    m20_change = _20;
+
+                    if (_20 >= 0){
+                        m20 = "widget style1 navy-bg";
+                        m20_level = "fa fa-level-up";
+                        m20_change = "+"+_20;
+                       }
+
+                    m60 = "widget style1 red-bg";
+                    m60_level = "fa fa-level-down";
+                    m60_change = _60;
+
+
+                    if (_60 >= 0){
+                        m60 = "widget style1 navy-bg";
+                        m60_level = "fa fa-level-up";
+                        m60_change = "+"+_60;
+                       }
+
+
+
+                    if( parseFloat(actual[0]['close']) > parseFloat(actual[0]['open']) )
+                    {
+                        d = {x: new Date(actual[0]['date']), y:[parseFloat(actual[0]['open']), parseFloat(actual[0]['high']), parseFloat(actual[0]['low']), parseFloat(actual[0]['close'])],color:green}
+                    }
+                    else
+                    {
+                        d = {x: new Date(actual[0]['date']), y:[parseFloat(actual[0]['open']), parseFloat(actual[0]['high']), parseFloat(actual[0]['low']), parseFloat(actual[0]['close'])],color:red}
+                    }
+
+
+                    last_date = actual[0]['date'];
+                    data.push(d)
+                    rolling.push({x: new Date(actual[0]['date']), y:parseFloat(actual[0]['rolling_mean'])})
+
+
+				for(var i = (mypredictions.length/2)-1; i>=0 ; i-- ){
+					mylabel = "";
+					mycolor = "";
+						if(parseInt(mypredictions[i]['predicted_movement']) > 0){
+						mylabel = "Gain";
+						mycolor = "#00b503";
+						}
+						else{
+						mylabel = "Loss";
+						mycolor = "#ed5565";
+						}
+					p = {x: new Date(mypredictions[i]['ndate']), y:parseFloat(mypredictions[i]['current_closing'])+gap,indexLabel:mylabel, color:mycolor,  markerColor:mycolor}
+						pred.push(p)
+						pred.shift();
+				}
+
+				for(var i = mypredictions.length-1; i>=mypredictions.length/2 ; i-- ){
+					mylabel = "";
+					mycolor = "";
+					mType = "triangle";
+					mColor: "#6B8E23";
+
+						if(parseInt(mypredictions[i]['predicted_movement']) ==  parseInt(mypredictions[i]['actual_movement'])){
+						mType = "triangle";
+						mycolor = "#00b503";
+						}
+						else{
+						mType = "cross";
+						mycolor = "#ed5565";
+						}
+					a = {x: new Date(mypredictions[i]['ndate']), y:parseFloat(mypredictions[i]['next_closing'])+gap,indexLabel:mylabel, color:mycolor,  markerColor:mycolor, markerType:mType}
+						answers.push(a)
+						answers.shift();
+				}
+
+
+
+
+                    }
+
+					}, function(error) {
+						console.log(error);
+					});
+
+        }
+
+
+updateChart();
+setInterval(function(){updateChart()}, updateInterval);
+setInterval(function(){ getStockValue(parsed[0])}, 3000);
+
+}
+
+
+</script>
+
+
+
+{% endblock %}
